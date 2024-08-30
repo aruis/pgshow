@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.1.1"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'application'
+apply plugin: "com.github.johnrengelman.shadow"
+
+
+def vertxVersion = '4.+'
+def groovyVersion = '4.+'
+
+mainClassName = 'net.ximatai.pgshow.launcher.AruisLauncher'
+def mainVerticleName = 'net.ximatai.pgshow.MainVerticle'
+
+shadowJar {
+    manifest {
+        attributes 'Main-Verticle': mainVerticleName
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+group 'net.ximatai'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "io.vertx:vertx-core"
+    implementation "io.vertx:vertx-web:$vertxVersion"
+    implementation "io.vertx:vertx-pg-client:$vertxVersion"
+
+    implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation "org.apache.groovy:groovy-json:$groovyVersion"
+
+    implementation 'com.ongres.scram:client:2.+'
+
+    testImplementation "org.apache.groovy:groovy-sql:$groovyVersion"
+    testImplementation 'org.postgresql:postgresql:42.+'
+
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.+'
+    implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: '2.+'
+}
+
+test {
+    useJUnitPlatform()
+}

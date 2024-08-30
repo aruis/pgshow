@@ -1,0 +1,13 @@
+{
+  "http": {
+    "port": 3020
+  },
+  "db": {
+    "host": "127.0.0.1",
+    "port": 54321,
+    "database": "demo",
+    "user": "postgres",
+    "password": "muyuntage",
+    "poolSize": 20
+  }
+}
