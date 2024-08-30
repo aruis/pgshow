@@ -26,6 +26,11 @@ GROUP BY
 
 select * from sales_summary;
 
+CREATE UNIQUE INDEX ON sales_summary (product_id);
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY  sales_summary;
+--  CONCURRENTLY 是 PostgreSQL 中刷新物化视图（REFRESH MATERIALIZED VIEW）的一个选项。它的主要作用是在刷新物化视图的过程中，允许物化视图仍然可以被查询使用，从而避免对依赖于该视图的查询造成阻塞或中断。
+
 -- 安装 pg_cron 扩展（需要超级用户权限）
 CREATE EXTENSION pg_cron;
 
@@ -33,4 +38,5 @@ CREATE EXTENSION pg_cron;
 SELECT cron.schedule('0 * * * *', 'REFRESH MATERIALIZED VIEW CONCURRENTLY sales_summary');
 
 select * from cron.job;
+
 select cron.unschedule(jobid) from cron.job;
